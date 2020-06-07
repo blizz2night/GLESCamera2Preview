@@ -22,7 +22,6 @@ import android.util.Size;
 import android.view.Surface;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -67,7 +66,6 @@ public class CameraController {
                     mConfigurationMap = mCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                     if (mConfigurationMap != null) {
                         mPreviewSizes = mConfigurationMap.getOutputSizes(SurfaceTexture.class);
-                        Log.i(TAG, "onCreate: " + Arrays.deepToString(mPreviewSizes));
                     }
                 }
             } catch (CameraAccessException e) {
@@ -76,7 +74,7 @@ public class CameraController {
         }
     }
 
-    Handler.Callback mCameraHandlerCallback = new Handler.Callback() {
+    private Handler.Callback mCameraHandlerCallback = new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
             switch (msg.what) {
@@ -118,6 +116,7 @@ public class CameraController {
 
                     if (mSurface != null) {
                         mSurface.release();
+                        mSurface = null;
                     }
                     break;
             }
@@ -189,9 +188,11 @@ public class CameraController {
         public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
             final Integer afMode = result.get(CaptureResult.CONTROL_AF_MODE);
             final Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
+            final Integer aeMode = result.get(CaptureResult.CONTROL_AE_MODE);
+            final Integer AeState = result.get(CaptureResult.CONTROL_AE_STATE);
             Log.i(TAG, "onCaptureCompleted: afMode=" + afMode + ", afState=" + afState
-                    + ", aeMode=" + result.get(CaptureResult.CONTROL_AE_MODE)
-                    + ", aeState=" + result.get(CaptureResult.CONTROL_AE_STATE));
+                    + ", aeMode=" + aeMode
+                    + ", aeState=" + AeState);
         }
 
         @Override
@@ -212,5 +213,24 @@ public class CameraController {
 
     public void release() {
         mHandler.getLooper().quitSafely();
+    }
+
+
+    public Size filterPreviewSize(int screenWidth, int screenHeight) {
+        final Size[] previewSizes = mPreviewSizes;
+        Size previewSize = new Size(480,640);
+        for (int i = 0; i < previewSizes.length; i++) {
+            //注意相机的sensor方向，比较时w和h要互换
+            Size size = previewSizes[i];
+            final int w = size.getWidth();
+            final int h = size.getHeight();
+            if (w >= previewSize.getWidth()
+                    && h >= previewSize.getHeight()
+                    && w <= screenHeight && h <= screenWidth) {
+                previewSize = size;
+            }
+        }
+        Log.i(TAG, "init: "+previewSize);
+        return previewSize;
     }
 }

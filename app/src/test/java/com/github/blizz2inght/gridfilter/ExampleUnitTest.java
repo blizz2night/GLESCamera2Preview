@@ -1,5 +1,8 @@
 package com.github.blizz2inght.gridfilter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;

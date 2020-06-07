@@ -71,4 +71,28 @@ public class Utils {
         return iProgId;
     }
 
+//    public void generateBitmap(View view) {
+//        Bitmap bitmap = Bitmap.createBitmap(16, 256, Bitmap.Config.ARGB_8888);
+//        final int[] pixels = new int[16 * 256];
+//        for (int b = 0; b < 16; b++) {
+//            for (int g = 0; g < 16; g++) {
+//                for (int r = 0; r < 16; r++) {
+//                    pixels[r + 16 * g + 256 * b] = 0xFF000000 | (r * 16 << 16) | (g * 16 << 8) | b * 16;
+//                }
+//             }
+//        }
+//        bitmap.setPixels(pixels,0,16,0,0,16,256);
+//        final File dir = getExternalMediaDirs()[0];
+//        final File file = new File(dir, "lut.png");
+//        try {
+//            file.createNewFile();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        try (FileOutputStream stream = new FileOutputStream(file)){
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
