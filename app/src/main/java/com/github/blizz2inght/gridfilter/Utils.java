@@ -1,10 +1,14 @@
 package com.github.blizz2inght.gridfilter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.util.Log;
+import android.view.View;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -71,28 +75,58 @@ public class Utils {
         return iProgId;
     }
 
-//    public void generateBitmap(View view) {
-//        Bitmap bitmap = Bitmap.createBitmap(16, 256, Bitmap.Config.ARGB_8888);
-//        final int[] pixels = new int[16 * 256];
-//        for (int b = 0; b < 16; b++) {
-//            for (int g = 0; g < 16; g++) {
-//                for (int r = 0; r < 16; r++) {
-//                    pixels[r + 16 * g + 256 * b] = 0xFF000000 | (r * 16 << 16) | (g * 16 << 8) | b * 16;
-//                }
-//             }
-//        }
-//        bitmap.setPixels(pixels,0,16,0,0,16,256);
-//        final File dir = getExternalMediaDirs()[0];
-//        final File file = new File(dir, "lut.png");
-//        try {
-//            file.createNewFile();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        try (FileOutputStream stream = new FileOutputStream(file)){
-//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+    public static Bitmap generateSquareLutBitmap(){
+        int block = 8;
+        int pixel = 64;
+        int factor = 256 / pixel;
+        int width = block * pixel;
+        int height = width;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        final int[] pixels = new int[width * height];
+        for (int b = 0; b < pixel; b++) {
+            for (int g = 0; g < pixel; g++) {
+                for (int r = 0; r < pixel; r++) {
+                    pixels[r + b % block * pixel + width * (g + b / block * pixel)] = 0xFF000000 | (r * factor << 16) | (g * factor << 8) | b * factor;
+                }
+            }
+        }
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        return bitmap;
+    }
+
+    public static Bitmap generateColumnLut() {
+        int pixel = 16;
+        int factor = 256 / pixel;
+        final int width = 16;
+        final int height = 256;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        final int[] pixels = new int[width * height];
+        for (int b = 0; b < pixel; b++) {
+            for (int g = 0; g < pixel; g++) {
+                for (int r = 0; r < pixel; r++) {
+                    pixels[r + width * g + height * b] = 0xFF000000 | (r * factor << 16) | (g * factor << 8) | b * factor;
+                }
+            }
+        }
+        bitmap.setPixels(pixels,0, width,0,0, width, height);
+        return bitmap;
+    }
+
+    public static void writeToDisk(Context context, Bitmap bitmap, String name) {
+        final File dir = context.getExternalMediaDirs()[0];
+        final File file = new File(dir, name);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (FileOutputStream stream = new FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

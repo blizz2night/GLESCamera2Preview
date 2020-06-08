@@ -17,47 +17,53 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/thumb_btn"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:onClick="generateBitmap"-->
-<!--        app:layout_constraintDimensionRatio="1"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/guideline4"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/cap_btn"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/guideline" />-->
+    <ImageButton
+        android:id="@+id/thumb_btn"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="generateBitmap"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/cap_btn"
+        app:layout_constraintEnd_toStartOf="@+id/cap_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cap_btn" />
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/cap_btn"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/thumb_btn"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/switch_btn"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/thumb_btn"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/thumb_btn" />-->
+    <ImageButton
+        android:id="@+id/cap_btn"
+        android:src="@drawable/ic_patch"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        android:onClick="showNinePatch"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/switch_btn"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/cap_btn"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/cap_btn"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/cap_btn" />-->
+    <ImageButton
+        android:id="@+id/switch_btn"
+        android:layout_width="60dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/cap_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cap_btn"
+        app:layout_constraintTop_toTopOf="@+id/cap_btn" />
 
-<!--    <androidx.constraintlayout.widget.Guideline-->
-<!--        android:id="@+id/guideline"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        app:layout_constraintGuide_percent="0.77"-->
-<!--        app:layout_constraintHeight_percent="70" />-->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.77"
+        app:layout_constraintHeight_percent="70" />
 
-<!--    <androidx.constraintlayout.widget.Guideline-->
-<!--        android:id="@+id/guideline4"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        app:layout_constraintGuide_percent="0.86" />-->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.86" />
 </androidx.constraintlayout.widget.ConstraintLayout>

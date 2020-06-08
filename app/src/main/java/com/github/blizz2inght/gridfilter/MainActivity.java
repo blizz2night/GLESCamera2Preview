@@ -77,11 +77,12 @@ public class MainActivity extends AppCompatActivity {
     private Size mPreviewSize;
     private Bitmap mLutsBitmap;
     private int mLutsTex;
+    private boolean mShowNinePatch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setFullScreen();
+        setFullScreen();
         mPerms = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkPermission();
@@ -155,6 +156,17 @@ public class MainActivity extends AppCompatActivity {
         mPreview.onResume();
 
         Log.i(TAG, "onResume: " + mDisplayMetrics);
+    }
+
+    public void generateBitmap(View view) {
+        final Bitmap square = Utils.generateSquareLutBitmap();
+        final Bitmap column = generateColumnLut();
+        Utils.writeToDisk(this,square,"square.png");
+        Utils.writeToDisk(this,column,"column.png");
+    }
+
+    public void showNinePatch(View view) {
+        mShowNinePatch = !mShowNinePatch;
     }
 
     class MyRender implements GLSurfaceView.Renderer {
@@ -273,30 +285,36 @@ public class MainActivity extends AppCompatActivity {
             GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mPreviewTex);
             GLES20.glUniform1i(u_TextureUnit, /* x= */ 0);
 
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFBO);
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, /* first= */ 0, /* offset= */ 4);
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-            GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
-            GLES20.glDisableVertexAttribArray(a_Position);
-            GLES20.glDisableVertexAttribArray(a_TexCoord);
+            if (mShowNinePatch) {
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFBO);
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, /* first= */ 0, /* offset= */ 4);
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+                GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
+                GLES20.glDisableVertexAttribArray(a_Position);
+                GLES20.glDisableVertexAttribArray(a_TexCoord);
 
-            GLES20.glUseProgram(mFilterProgram);
-            mVertexBuffer.position(0);
-            GLES20.glVertexAttribPointer(a_FilterPosition, 2, GLES20.GL_FLOAT, false, 4 * 4, mVertexBuffer);
-            GLES20.glEnableVertexAttribArray(a_FilterPosition);
+                GLES20.glUseProgram(mFilterProgram);
+                mVertexBuffer.position(0);
+                GLES20.glVertexAttribPointer(a_FilterPosition, 2, GLES20.GL_FLOAT, false, 4 * 4, mVertexBuffer);
+                GLES20.glEnableVertexAttribArray(a_FilterPosition);
 
-            mVertexBuffer.position(2);
-            GLES20.glVertexAttribPointer(a_FilterTexCoord, 2, GLES20.GL_FLOAT, false, 4 * 4, mVertexBuffer);
-            GLES20.glEnableVertexAttribArray(a_FilterTexCoord);
+                mVertexBuffer.position(2);
+                GLES20.glVertexAttribPointer(a_FilterTexCoord, 2, GLES20.GL_FLOAT, false, 4 * 4, mVertexBuffer);
+                GLES20.glEnableVertexAttribArray(a_FilterTexCoord);
 
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mFilterTex);
-            GLES20.glUniform1i(u_FilterTextureUnit, 0);
+                GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mFilterTex);
+                GLES20.glUniform1i(u_FilterTextureUnit, 0);
 
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mLutsTex);
-            GLES20.glUniform1i(u_FilterLookupTable, 1);
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, /* first= */ 0, /* offset= */ 4);
+                GLES20.glActiveTexture(GLES20.GL_TEXTURE1);
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mLutsTex);
+                GLES20.glUniform1i(u_FilterLookupTable, 1);
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, /* first= */ 0, /* offset= */ 4);
+            } else {
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, /* first= */ 0, /* offset= */ 4);
+            }
+
+
 
         }
     }
