@@ -18,21 +18,20 @@ const float COL = 3.0;
 
 vec3 applyLut(vec3 color, sampler2D lookup_table, float index) {
     float blue = color.b * (c_LutSize - 1.0);
-    float green = color.g * (c_LutSize - 1.0);
-    float red = color.r * (c_LutSize - 1.0);
+    float green = 0.5 + color.g * (c_LutSize - 1.0);
+    float red = 0.5 + color.r * (c_LutSize - 1.0);
 
     float blue_low = clamp(floor(blue), 0.0, c_LutSize - 2.0);
 
-    float lower_y = (0.5 + blue_low * c_LutSize + green) / (c_LutSize * c_LutSize);
+    float lower_y = (blue_low * c_LutSize) / (c_LutSize * c_LutSize);
     float upper_y = lower_y + 1.0 / c_LutSize;
 
-    float x = (0.5 + c_LutSize * index + red) / (c_LutSize * c_LutCount);
+    float x = (c_LutSize * index + red) / (c_LutSize * c_LutCount);
 
     vec3 lower_rgb = texture2D(lookup_table, vec2(x, lower_y)).rgb;
     vec3 upper_rgb = texture2D(lookup_table, vec2(x, upper_y)).rgb;
     float frac_b = blue - blue_low;
 
-    color =  vec3(0.3 * color.r + 0.59 * color.g + 0.11 * color.b);
     //线性插值x*(1-a)+a*y
     return mix(lower_rgb, upper_rgb, frac_b);
 }
